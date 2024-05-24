@@ -314,11 +314,19 @@ EOD;
 		$syslogconf .= system_syslogd_get_remote_servers($syslogcfg, "*.*");
 	}
 
-	$syslogconf .= "!dnsmasq,named,filterdns,unbound\n";
+	$syslogconf .= "!dnsmasq,filterdns,unbound\n";
 	if (!config_path_enabled('syslog', 'disablelocallogging')) {
 		$syslogconf .= "*.*									{$g['varlog_path']}/resolver.log\n";
 	}
 	if (config_path_enabled('syslog', 'resolver')) {
+		$syslogconf .= system_syslogd_get_remote_servers($syslogcfg, "*.*");
+	}
+
+	$syslogconf .= "!named\n";
+	if (!config_path_enabled('syslog', 'disablelocallogging')) {
+		$syslogconf .= "*.*									{$g['varlog_path']}/named.log\n";
+	}
+	if (config_path_enabled('syslog', 'named')) {
 		$syslogconf .= system_syslogd_get_remote_servers($syslogcfg, "*.*");
 	}
 
